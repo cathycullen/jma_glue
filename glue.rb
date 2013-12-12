@@ -1,4 +1,6 @@
 require 'sinatra'
+require 'dotenv'
+Dotenv.load
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
 # Left as 'get' for easy testing until we deploy.
