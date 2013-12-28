@@ -17,15 +17,17 @@ get '/constant_contact' do
 end
 
 post '/podio_contact' do
-  Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
-              :api_secret => ENV['PODIO_CLIENT_SECRET'])
-  Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
-                                             ENV['PODIO_PASSWORD'])
+  if params['name'] && (params['email'] || params['phone'])
+    Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
+                :api_secret => ENV['PODIO_CLIENT_SECRET'])
+    Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
+                                               ENV['PODIO_PASSWORD'])
 
-  PodioWrapper.log_new_contact(params['name'],
-                               params['email'],
-                               params['phone'],
-                               params['message']).to_json
+    PodioWrapper.log_new_contact(params['name'],
+                                 params['email'],
+                                 params['phone'],
+                                 params['message']).to_json
+  end
 
   redirect to("http://www.jodymichael.com/thank-you")
 end
