@@ -18,10 +18,12 @@ get '/constant_contact' do
   'Hello from Constant Contact endpoint'
 end
 
-get '/podio_contact' do
+post '/podio_contact' do
   content_type :json
-  PodioWrapper.log_new_contact("Nate Delage",
-                               "nate@natedelage.com",
-                               "555-5555").to_json
+  PodioWrapper.log_new_contact(params[:name],
+                               params[:email],
+                               params[:phone]).to_json
+
+  redirect to("http://www.jodymichael.com/thank-you")
 end
 
