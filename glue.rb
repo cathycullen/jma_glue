@@ -4,12 +4,10 @@ require 'podio'
 require 'json'
 
 require './podio_wrapper'
-
 Dotenv.load
-Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
-            :api_secret => ENV['PODIO_CLIENT_SECRET'])
-Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
-                                           ENV['PODIO_PASSWORD'])
+
+set :protection, :except => [:http_origin]
+use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://www.jodymichael.com']
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
 # Left as 'get' for easy testing until we deploy.
@@ -19,10 +17,14 @@ get '/constant_contact' do
 end
 
 post '/podio_contact' do
-  content_type :json
-  PodioWrapper.log_new_contact(params[:name],
-                               params[:email],
-                               params[:phone]).to_json
+  Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
+              :api_secret => ENV['PODIO_CLIENT_SECRET'])
+  Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
+                                             ENV['PODIO_PASSWORD'])
+
+  PodioWrapper.log_new_contact(params['name'],
+                               params['email'],
+                               params['phone']).to_json
 
   redirect to("http://www.jodymichael.com/thank-you")
 end
