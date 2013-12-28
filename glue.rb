@@ -24,7 +24,8 @@ post '/podio_contact' do
 
   PodioWrapper.log_new_contact(params['name'],
                                params['email'],
-                               params['phone']).to_json
+                               params['phone'],
+                               params['message']).to_json
 
   redirect to("http://www.jodymichael.com/thank-you")
 end
