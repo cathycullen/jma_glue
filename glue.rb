@@ -2,10 +2,30 @@ require 'sinatra'
 require 'dotenv'
 require 'podio'
 require 'json'
-
+require 'data_mapper'
 require './podio_wrapper'
-Dotenv.load
 
+DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/glue.db")
+
+class Submission
+  include DataMapper::Resource
+  property :id, Serial
+  property :name, String
+  property :email, String
+  property :phone, String
+  property :message, Text
+
+  property :created_at, DateTime
+end
+
+# Perform basic sanity checks and initialize all relationships
+# Call this when you've defined all your models
+DataMapper.finalize
+
+# automatically create the post table
+Submission.auto_upgrade!
+
+Dotenv.load
 set :protection, :except => [:http_origin]
 use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://www.jodymichael.com']
 
@@ -18,6 +38,13 @@ end
 
 post '/podio_contact' do
   if params['name'] && (params['email'] || params['phone'])
+
+    Submission.create!(name: params['name'],
+                       email: params['email'],
+                       phone: params['phone'],
+                       message: params['message'],
+                       created_at: Time.now)
+
     Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
                 :api_secret => ENV['PODIO_CLIENT_SECRET'])
     Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
@@ -29,6 +56,5 @@ post '/podio_contact' do
                                  params['message']).to_json
   end
 
-  redirect to("http://www.jodymichael.com/thank-you")
+  redirect to("http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
 end
-
