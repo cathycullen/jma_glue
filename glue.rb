@@ -14,6 +14,7 @@ class Submission
   property :email, String
   property :phone, String
   property :message, Text
+  property :contact_db, String
 
   property :created_at, DateTime
 end
@@ -27,7 +28,11 @@ Submission.auto_upgrade!
 
 Dotenv.load
 set :protection, :except => [:http_origin]
-use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://www.jodymichael.com']
+use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://jodymichael.com',
+                                                        'http://www.jodymichael.com',
+                                                        'http://www.careercheetah.net/',
+                                                        'http://careercheetah.net/',
+                                                        'http://localhost:8000']
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
 # Left as 'get' for easy testing until we deploy.
@@ -43,18 +48,20 @@ post '/podio_contact' do
                        email: params['email'],
                        phone: params['phone'],
                        message: params['message'],
-                       created_at: Time.now)
+                       created_at: Time.now,
+                       contact_db: params['contact_db'] || "jma")
 
     Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
                 :api_secret => ENV['PODIO_CLIENT_SECRET'])
     Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
                                                ENV['PODIO_PASSWORD'])
 
-    PodioWrapper.log_new_contact(params['name'],
-                                 params['email'],
-                                 params['phone'],
-                                 params['message']).to_json
+    w = PodioWrapper.new(params['contact_db'] || "jma")
+    w.log_new_contact(params['name'],
+                      params['email'],
+                      params['phone'],
+                      params['message']).to_json
   end
 
-  redirect to("http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
+  redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
 end
