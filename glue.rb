@@ -30,8 +30,8 @@ Dotenv.load
 set :protection, :except => [:http_origin]
 use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://jodymichael.com',
                                                         'http://www.jodymichael.com',
-                                                        'http://www.careercheetah.net/',
-                                                        'http://careercheetah.net/',
+                                                        'http://www.careercheetah.net',
+                                                        'http://careercheetah.net',
                                                         'http://localhost:8000']
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
