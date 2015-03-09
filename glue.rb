@@ -7,6 +7,7 @@ require 'net/http'
 require 'rack'
 
 require './podio_wrapper'
+require './hubspot_wrapper'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || "sqlite3://#{Dir.pwd}/glue.db")
 
