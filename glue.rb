@@ -136,7 +136,7 @@ def submit_hubspot_contact (first_name, last_name, email, phone, message, page_n
       :lastname => last_name,
       :email => email, 
       :phone => phone,
-      :message => messag
+      :message => message
   }
   wrapper.submit my_params
 
