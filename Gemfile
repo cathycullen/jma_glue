@@ -6,7 +6,7 @@ gem "sinatra"
 gem "dotenv"
 gem "shotgun"
 gem "podio"
-gem 'faraday', "0.8.9"
+gem 'faraday'
 gem 'json'
 gem 'rake'
 gem 'shotgun'
