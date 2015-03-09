@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/cookies'
 require 'dotenv'
 require 'podio'
 require 'json'
