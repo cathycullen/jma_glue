@@ -89,7 +89,7 @@ post '/new_jma_contact' do
       params['phone'],
       params['message'],
       params['page_name'],
-      params['form_id')
+      params['form_id'])
   end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
