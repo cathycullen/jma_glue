@@ -88,7 +88,7 @@ post '/new_jma_contact' do
       params['email'], 
       params['phone'],
       params['message'],
-      params['page_name')
+      params['page_name'],
       params['form_id')
   end
 
