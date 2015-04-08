@@ -72,7 +72,9 @@ post '/podio_contact' do
 end
 
 post '/new_jma_contact' do
-  puts "params:  #{params}"
+  puts "params:  #{params} cookies: #{cookies}"
+
+  puts "*********** cookies hubspotutk #{cookies[:hubspotutk]}"
   if params['first_name'] && params['last_name'] && params['page_name'] && params['form_id'] && (params['email'] || params['phone'])
     name = params['first_name'] + " " + params['last_name'] 
 
@@ -91,7 +93,8 @@ post '/new_jma_contact' do
       params['phone'],
       params['message'],
       params['page_name'],
-      params['form_id'])
+      params['form_id'],
+      cookies[:hubspotutk])
   end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
@@ -119,14 +122,14 @@ def submit_podio_contact(name, email, phone, message, contact_db)
 
 end
 
-def submit_hubspot_contact (first_name, last_name, email, phone, message, page_name, form_id)
+def submit_hubspot_contact (first_name, last_name, email, phone, message, page_name, form_id, hubspotutk)
   wrapper = HubspotWrapper.new(
     # These are mandatory
     portal_id: ENV['HUBSPOT_PORTAL_ID'],
     form_guid: form_id,
     # These are optional
     request_ip: request.ip,
-    hutk: cookies[:hubspotutk],
+    hutk: hubspotutk,
     page_url: request.url,
     page_title: page_name
   )
