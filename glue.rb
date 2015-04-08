@@ -72,9 +72,9 @@ post '/podio_contact' do
 end
 
 post '/new_jma_contact' do
-  puts "params:  #{params} cookies: #{cookies}"
+  puts "params:  #{params} cookies: #{request.cookies}"
 
-  puts "*********** cookies hubspotutk #{cookies[:hubspotutk]}"
+  puts "*********** cookies hubspotutk #{request.cookies[:hubspotutk]}"
   if params['first_name'] && params['last_name'] && params['page_name'] && params['form_id'] && (params['email'] || params['phone'])
     name = params['first_name'] + " " + params['last_name'] 
 
@@ -94,7 +94,7 @@ post '/new_jma_contact' do
       params['message'],
       params['page_name'],
       params['form_id'],
-      cookies[:hubspotutk])
+      request.cookies[:hubspotutk])
   end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
