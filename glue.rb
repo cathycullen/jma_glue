@@ -41,7 +41,8 @@ use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://jodymichael.com'
 
 
 get '/'
-'Hello from jma-glue'
+  'Hello from jma-glue'
+end
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
 # Left as 'get' for easy testing until we deploy.
