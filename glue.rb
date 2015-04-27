@@ -77,9 +77,11 @@ post '/podio_contact' do
 end
 
 post '/new_jma_contact' do
-  puts "params:  #{params} cookies: #{request.cookies}"
+  puts "params:  #{params}"
+  puts "cookies: keys?  #{cookies.keys}"
+  puts "*****************************************************************************"
+  puts "cookies.hubstpotutk #{cookies["hubspotutk"]} , #{cookies[:hubspotutk]} "
 
-  puts "*********** cookies hubspotutk #{request.cookies[:hubspotutk]}"
   if params['first_name'] && params['last_name'] && params['page_name'] && params['form_id'] && (params['email'] || params['phone'])
     name = params['first_name'] + " " + params['last_name'] 
 
