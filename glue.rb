@@ -40,7 +40,7 @@ use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://jodymichael.com'
                                                         'http://localhost:8000']
 
 
-get '/'
+get '/' do
   'Hello from jma-glue'
 end
 
