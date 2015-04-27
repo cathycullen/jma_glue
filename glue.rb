@@ -101,7 +101,7 @@ post '/new_jma_contact' do
       params['message'],
       params['page_name'],
       params['form_id'],
-      request.cookies[:hubspotutk])
+      cookies[:hubspotutk])
   end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
