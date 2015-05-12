@@ -18,21 +18,31 @@ class PodioWrapper
   end
 
   def create_contact(name, email, phone)
-    contact_attributes = {'mail' => [email],
-                          'name' => name,
-                          'phone' => [phone]}
+    begin
+      contact_attributes = {'mail' => [email],
+                            'name' => name,
+                            'phone' => [phone]}
 
-    resp = Podio::Profile.create_space_contact(@config[:contact_space],
-                                               contact_attributes)
+      resp = Podio::Profile.create_space_contact(@config[:contact_space],
+                                                 contact_attributes)
+    rescue Exception => e
+      puts "PodioWrapper:  rescue caught in create_contact #{e.message}"
+      puts e.backtrace 
+    end
     resp['profile_id']
   end
 
   def create_call_log(profile_id, message="")
-    log_attributes = {'fields' => {'contact-details' => profile_id,
-                                   'notes' => message}
-                     }
+    begin
+      log_attributes = {'fields' => {'contact-details' => profile_id,
+                                     'notes' => message}
+                       }
 
-    Podio::Item.create(@config[:app_id], log_attributes )
+      Podio::Item.create(@config[:app_id], log_attributes )
+    rescue Exception => e
+      puts "PodioWrapper:  rescue caught in create_contact #{e.message}"
+      puts e.backtrace 
+    end
   end
 
 end

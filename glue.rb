@@ -53,25 +53,30 @@ end
 
 post '/podio_contact' do
   if params['name'] && (params['email'] || params['phone'])
+    begin
+      Submission.create!(name: params['name'],
+                         email: params['email'],
+                         phone: params['phone'],
+                         message: params['message'],
+                         created_at: Time.now,
+                         contact_db: params['contact_db'] || "jma")
 
-    Submission.create!(name: params['name'],
-                       email: params['email'],
-                       phone: params['phone'],
-                       message: params['message'],
-                       created_at: Time.now,
-                       contact_db: params['contact_db'] || "jma")
+      Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
+                  :api_secret => ENV['PODIO_CLIENT_SECRET'])
+      Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
+                                                 ENV['PODIO_PASSWORD'])
 
-    Podio.setup(:api_key => ENV['PODIO_CLIENT_ID'],
-                :api_secret => ENV['PODIO_CLIENT_SECRET'])
-    Podio.client.authenticate_with_credentials(ENV['PODIO_USERNAME'],
-                                               ENV['PODIO_PASSWORD'])
+      w = PodioWrapper.new(params['contact_db'] || "jma")
+      w.log_new_contact(params['name'],
+                        params['email'],
+                        params['phone'],
+                        params['message']).to_json
+    end
 
-    w = PodioWrapper.new(params['contact_db'] || "jma")
-    w.log_new_contact(params['name'],
-                      params['email'],
-                      params['phone'],
-                      params['message']).to_json
-  end
+    rescue Exception => e
+      puts "glue.rb:  rescue caught in /podio_contact #{e.message}"
+      puts e.backtrace 
+    end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
 end
