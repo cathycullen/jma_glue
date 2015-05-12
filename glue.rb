@@ -71,12 +71,12 @@ post '/podio_contact' do
                         params['email'],
                         params['phone'],
                         params['message']).to_json
-    end
 
     rescue Exception => e
       puts "glue.rb:  rescue caught in /podio_contact #{e.message}"
       puts e.backtrace 
     end
+  end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
 end
