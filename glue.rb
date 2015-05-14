@@ -39,13 +39,25 @@ use Rack::Protection::HttpOrigin, :origin_whitelist => ['http://jodymichael.com'
                                                         'http://careercheetah.net',
                                                         'http://localhost:8000']
 
-
 get '/' do
   'Hello from jma-glue'
 end
 
+post '/post_hubspot_contact' do
+  json_data = JSON.parse(request.body.read)
+  puts "json_data #{json_data}"
+  xx = JSON.parse (json_data.to_json)
+  puts "xx #{xx.to_s}"
+  puts "first_name #{xx["first_name"]}"
+end
+
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
 # Left as 'get' for easy testing until we deploy.
+get '/cc_form' do
+ 
+  erb :cc_form 
+end
+
 get '/constant_contact' do
   # use params[:email_adddress] to access email from form submission
   'Hello from Constant Contact endpoint'
@@ -78,7 +90,7 @@ post '/podio_contact' do
     end
   end
 
-  redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
+  redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") 
 end
 
 post '/new_jma_contact' do

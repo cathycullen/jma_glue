@@ -25,11 +25,21 @@ class PodioWrapper
 
       resp = Podio::Profile.create_space_contact(@config[:contact_space],
                                                  contact_attributes)
+      resp['profile_id']
     rescue Exception => e
-      puts "PodioWrapper:  rescue caught in create_contact #{e.message}"
+      puts "Hello: PodioWrapper:  rescue caught in create_contact ****** methods:  #{e.message.methods} ****** class:  #{e.message.class} #{e.message} "
+      puts "*** size:  #{e.message.size}"
+      my_json = e.message.to_json
+      puts "*** json size: #{my_json.size} class: #{my_json.class} methods:  #{my_json.methods}"
+      my_json.each do |j|
+        puts "j:  #{j}"
+      end
+
+      puts "my_json #{my_json}"
+      puts "my_json: #{my_json["error_parameters"]}"
+      
       puts e.backtrace 
     end
-    resp['profile_id']
   end
 
   def create_call_log(profile_id, message="")
