@@ -45,10 +45,14 @@ end
 
 post '/post_hubspot_contact' do
   json_data = JSON.parse(request.body.read)
+  puts "***********************************************************************************"
   puts "json_data #{json_data}"
+  puts "***********************************************************************************"
   xx = JSON.parse (json_data.to_json)
   puts "xx #{xx.to_s}"
+  puts "***********************************************************************************"
   puts "first_name #{xx["first_name"]}"
+  puts "***********************************************************************************"
 end
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
