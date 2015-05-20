@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sinatra/cookies'
 require 'dotenv'
 require 'podio'
+require 'rubygems'
 require 'json'
 require 'data_mapper'
 require 'net/http'
@@ -43,8 +44,17 @@ get '/' do
   'Hello from jma-glue'
 end
 
-post '/post_hubspot_contact' do
-  json_data = JSON.parse(request.body.read)
+def extract_hubspot_property(property)
+  begin
+    property["value"] unless property.nil?
+  rescue Exception => e
+    puts "glue.rb:  rescue caught in /extract_hubspot_property #{e.message}"
+    puts e.backtrace 
+  end
+end
+
+post '/current_post_hubspot_contact'
+json_data = JSON.parse(request.body.read)
   puts "***********************************************************************************"
   puts "json_data #{json_data}"
   puts "***********************************************************************************"
@@ -53,6 +63,20 @@ post '/post_hubspot_contact' do
   puts "***********************************************************************************"
   puts "first_name #{xx["first_name"]}"
   puts "***********************************************************************************"
+end
+
+post '/post_hubspot_contact' do
+  json_data = JSON.parse(request.body.read)
+  props = json_data["properties"]
+  puts "***********************************************************************************"
+  puts "props.keys #{props.keys}"
+  puts "***********************************************************************************"
+  #firstname = extract_hubspot_property props["firstname"]
+  #lastname = extract_hubspot_property props["lastname"]
+  #email = extract_hubspot_property props["email"]
+  #message = extract_hubspot_property props["message"]
+  #puts "firstname: #{firstname} lastname: #{lastname} email: #{email} message:  #{message}"
+
 end
 
 # Note: These endpoints should all be 'post', not 'get' to handle a form submission.
@@ -97,6 +121,10 @@ post '/podio_contact' do
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") 
 end
 
+def podio_name(first, last)
+   first + " " + last
+ end
+
 post '/new_jma_contact' do
   puts "params:  #{params}"
   puts "cookies: keys?  #{cookies.keys}"
@@ -104,7 +132,7 @@ post '/new_jma_contact' do
   puts "cookies.hubstpotutk #{cookies["hubspotutk"]} , #{cookies[:hubspotutk]} "
 
   if params['first_name'] && params['last_name'] && params['page_name'] && params['form_id'] && (params['email'] || params['phone'])
-    name = params['first_name'] + " " + params['last_name'] 
+    name = podio_name(params['first_name'], params['last_name'])
 
     submit_podio_contact(name, 
       params['email'], 
@@ -129,6 +157,9 @@ post '/new_jma_contact' do
 end
 
 def submit_podio_contact(name, email, phone, message, contact_db)
+  if message.size == 0
+    message = "no message"
+  end
   puts "submit_podio_contact"
     Submission.create!(name: name,
                        email: email,
