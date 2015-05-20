@@ -71,11 +71,11 @@ post '/post_hubspot_contact' do
   puts "***********************************************************************************"
   puts "props.keys #{props.keys}"
   puts "***********************************************************************************"
-  #firstname = extract_hubspot_property props["firstname"]
-  #lastname = extract_hubspot_property props["lastname"]
-  #email = extract_hubspot_property props["email"]
-  #message = extract_hubspot_property props["message"]
-  #puts "firstname: #{firstname} lastname: #{lastname} email: #{email} message:  #{message}"
+  firstname = extract_hubspot_property props["firstname"]
+  lastname = extract_hubspot_property props["lastname"]
+  email = extract_hubspot_property props["email"]
+  message = extract_hubspot_property props["message"]
+  puts "firstname: #{firstname} lastname: #{lastname} email: #{email} message:  #{message}"
 
 end
 
