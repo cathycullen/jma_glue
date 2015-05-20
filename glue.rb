@@ -53,7 +53,7 @@ def extract_hubspot_property(property)
   end
 end
 
-post '/current_post_hubspot_contact'
+post '/current_post_hubspot_contact' do
 json_data = JSON.parse(request.body.read)
   puts "***********************************************************************************"
   puts "json_data #{json_data}"
