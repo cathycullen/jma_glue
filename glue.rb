@@ -44,11 +44,11 @@ get '/' do
   'Hello from jma-glue'
 end
 
-def extract_hubspot_property(property)
+def hubspot_field(property)
   begin
     property["value"] unless property.nil?
   rescue Exception => e
-    puts "glue.rb:  rescue caught in /extract_hubspot_property #{e.message}"
+    puts "glue.rb:  rescue caught in /hubspot_field #{e.message}"
     puts e.backtrace 
   end
 end
@@ -71,11 +71,19 @@ post '/post_hubspot_contact' do
   puts "***********************************************************************************"
   puts "props.keys #{props.keys}"
   puts "***********************************************************************************"
-  firstname = extract_hubspot_property props["firstname"]
-  lastname = extract_hubspot_property props["lastname"]
-  email = extract_hubspot_property props["email"]
-  message = extract_hubspot_property props["message"]
+  firstname = hubspot_field (props["firstname"])
+  lastname = hubspot_field (props["lastname"])
+  email = hubspot_field(props["email"])
+  phone = hubspot_field(props["phone"])
+  message = hubspot_field(props["message"])
   puts "firstname: #{firstname} lastname: #{lastname} email: #{email} message:  #{message}"
+  name = podio_name(firstname, lastname)
+
+  submit_podio_contact(name, 
+      email, 
+      phone,
+      message,
+      "jma")
 
 end
 
@@ -126,10 +134,7 @@ def podio_name(first, last)
  end
 
 post '/new_jma_contact' do
-  puts "params:  #{params}"
-  puts "cookies: keys?  #{cookies.keys}"
-  puts "*****************************************************************************"
-  puts "cookies.hubstpotutk #{cookies["hubspotutk"]} , #{cookies[:hubspotutk]} "
+  puts "/new_jma_contract:  params:  #{params}"
 
   if params['first_name'] && params['last_name'] && params['page_name'] && params['form_id'] && (params['email'] || params['phone'])
     name = podio_name(params['first_name'], params['last_name'])
