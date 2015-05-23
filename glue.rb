@@ -165,7 +165,7 @@ def submit_podio_contact(name, email, phone, message, contact_db)
   if message.size == 0
     message = "no message"
   end
-  puts "submit_podio_contact"
+  puts "submit_podio_contact : #{name} #{email} #{phone} #{message}"
     Submission.create!(name: name,
                        email: email,
                        phone: phone,
