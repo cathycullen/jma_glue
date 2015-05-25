@@ -156,6 +156,8 @@ post '/new_jma_contact' do
       params['page_name'],
       params['form_id'],
       cookies[:hubspotutk])
+  else
+    puts "insufficient information for contact: params:  #{params}"
   end
 
   redirect to(params['redirect'] || "http://www.jodymichael.com/thank-you") if Sinatra::Base.production?
