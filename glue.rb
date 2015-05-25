@@ -164,7 +164,7 @@ post '/new_jma_contact' do
 end
 
 def submit_podio_contact(name, email, phone, message, contact_db)
-  if message.size == 0
+  if message.nil?
     message = "no message"
   end
   puts "submit_podio_contact : #{name} #{email} #{phone} #{message}"
