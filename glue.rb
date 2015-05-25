@@ -165,7 +165,9 @@ end
 
 def submit_podio_contact(name, email, phone, message, contact_db)
   if message.nil?
-    message = "no message"
+    message = "hubspot contact us: no message"
+  else
+    message = "hubspot contact us: " + message
   end
   puts "submit_podio_contact : #{name} #{email} #{phone} #{message}"
     Submission.create!(name: name,
