@@ -66,6 +66,7 @@ json_data = JSON.parse(request.body.read)
 end
 
 post '/post_hubspot_contact' do
+  # this should only get called by someone who said contact us from the ebook download.
   json_data = JSON.parse(request.body.read)
   props = json_data["properties"]
   puts "***********************************************************************************"
@@ -76,7 +77,7 @@ post '/post_hubspot_contact' do
   email = hubspot_field(props["email"])
   phone = hubspot_field(props["phone"])
   message = hubspot_field(props["message"])
-  puts "firstname: #{firstname} lastname: #{lastname} email: #{email} message:  #{message}"
+  puts "/post_hubspot_contact  firstname: #{firstname} lastname: #{lastname} email: #{email} message:  #{message}"
   name = podio_name(firstname, lastname)
 
   submit_podio_contact(name, 
@@ -100,6 +101,8 @@ get '/constant_contact' do
 end
 
 post '/podio_contact' do
+
+  puts "/podio_contact "
   if params['name'] && (params['email'] || params['phone'])
     begin
       Submission.create!(name: params['name'],
@@ -134,7 +137,8 @@ def podio_name(first, last)
  end
 
 post '/new_jma_contact' do
-  puts "/new_jma_contract:  params:  #{params}"
+  # this is called by the contact us jodymichael.com/contact-us
+  puts "/new_jma_contact: this is called by jodymichael.com/contact-us params:  #{params}"
 
   if params['first_name'] && params['last_name'] && params['page_name'] && params['form_id'] && (params['email'] || params['phone'])
     name = podio_name(params['first_name'], params['last_name'])
