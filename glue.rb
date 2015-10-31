@@ -67,6 +67,7 @@ end
 
 post '/post_hubspot_contact' do
   # this should only get called by someone who said contact us from the ebook download.
+  # this is called from hubspot PPC workflow.
   json_data = JSON.parse(request.body.read)
   props = json_data["properties"]
   puts "***********************************************************************************"
