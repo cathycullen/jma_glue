@@ -1,6 +1,6 @@
 # JMA Glue
 
-This app is a small glue app that helps connect existing sites like JMA and CareerCheetah to services like Podio and ConstantContact.
+This app is a small glue app that helps connect existing sites like JMA and CareerCheetah to services like Hubspot, Podio and ConstantContact.
 
 ## Setup the app
 
