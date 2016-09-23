@@ -18,7 +18,6 @@ class HubspotWrapper
       ) unless @portal_id && @form_guid
 
     base_url = "https://forms.hubspot.com/"
-    puts "base_url: #{base_url}"
     @conn = Faraday.new(
       url:      base_url,
       ssl:      { verify: false },
@@ -28,9 +27,9 @@ class HubspotWrapper
   def submit params
     params[:hs_context] = hs_context
 
-    puts "params:  #{params}"
-    puts "url: uploads/form/v2/#{@portal_id}/#{@form_guid}"
-    puts "body: #{URI.encode_www_form params}"
+    # puts "params:  #{params}"
+    # puts "url: uploads/form/v2/#{@portal_id}/#{@form_guid}"
+    # puts "body: #{URI.encode_www_form params}"
 
     response = @conn.post do |req|
       req.url "uploads/form/v2/#{@portal_id}/#{@form_guid}"
@@ -38,7 +37,6 @@ class HubspotWrapper
       req.body = URI.encode_www_form params
     end
 
-    puts "response: #{response.status}"
     if response.status == 204 || 302 #302 is redirect with a location to the "thank you" page
       response
     else
@@ -54,7 +52,7 @@ class HubspotWrapper
       'pageName' => @page_title,
       'redirectUrl' => 'http://www.jodymichael.com/thank-you'
     }
-    puts "hs_context: #{values}"
+    # puts "hs_context: #{values}"
     values.to_json
   end
 end
